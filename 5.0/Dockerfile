@@ -42,8 +42,8 @@ RUN apt-get install -y \
 
 # WordPress herunter laden
 RUN mkdir -p /opt/wordpress
-RUN wget https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz --directory-prefix /opt/wordpress
-RUN tar zxvf /opt/wordpress/wordpress-${WORDPRESS_VERSION}.tar.gz -C /opt/wordpress
+RUN wget https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz --directory-prefix /tmp
+RUN tar zxvf /tmp/wordpress-${WORDPRESS_VERSION}.tar.gz -C /opt/wordpress
 
 # WordPress CLI installieren
 RUN mkdir -p /opt/wp-cli
