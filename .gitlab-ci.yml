@@ -197,9 +197,8 @@ deploy:branches:5.0:
     
 build_siblings:
     stage: build_siblings
-    tags: 
-        - docker:latest
-        - tuhh
+    tags:
+        - build
     only:
         - master
     script:
