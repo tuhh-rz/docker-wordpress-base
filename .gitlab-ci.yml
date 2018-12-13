@@ -37,6 +37,7 @@ variables:
 stages:
     - build
     - deploy
+    - build_siblings
 
 build:4.7:
     stage: build
@@ -193,3 +194,14 @@ deploy:branches:5.0:
         VERSION: '5.0'
         VARIANT: ''
     script: *deploy_branches_script_definition
+    
+build_siblings:
+    stage: build_siblings
+    tags: 
+        - docker:latest
+        - tuhh
+    only:
+        - master
+    script:
+        - "curl -X POST --silent --show-error --fail -F token=${TRIGGER_BUILD_TOKEN_MASTER_1944} -F ref=${CI_COMMIT_REF_NAME}  https://collaborating.tuhh.de/api/v4/projects/1944/trigger/pipeline"
+        - "curl -X POST --silent --show-error --fail -F token=${TRIGGER_BUILD_TOKEN_MASTER_1943} -F ref=${CI_COMMIT_REF_NAME}  https://collaborating.tuhh.de/api/v4/projects/1943/trigger/pipeline""
