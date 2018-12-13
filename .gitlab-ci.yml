@@ -203,5 +203,5 @@ build_siblings:
     only:
         - master
     script:
-        - "curl -X POST --silent --show-error --fail -F token=${TRIGGER_BUILD_TOKEN_MASTER_1944} -F ref=${CI_COMMIT_REF_NAME}  https://collaborating.tuhh.de/api/v4/projects/1944/trigger/pipeline"
-        - "curl -X POST --silent --show-error --fail -F token=${TRIGGER_BUILD_TOKEN_MASTER_1943} -F ref=${CI_COMMIT_REF_NAME}  https://collaborating.tuhh.de/api/v4/projects/1943/trigger/pipeline""
+        - curl -X POST --silent --show-error --fail -F token=${TRIGGER_BUILD_TOKEN_MASTER_1944} -F ref=${CI_COMMIT_REF_NAME}  https://collaborating.tuhh.de/api/v4/projects/1944/trigger/pipeline
+        - curl -X POST --silent --show-error --fail -F token=${TRIGGER_BUILD_TOKEN_MASTER_1943} -F ref=${CI_COMMIT_REF_NAME}  https://collaborating.tuhh.de/api/v4/projects/1943/trigger/pipeline
