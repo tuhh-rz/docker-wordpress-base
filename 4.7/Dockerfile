@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-ENV WORDPRESS_VERSION 4.7.11
+ENV WORDPRESS_VERSION 4.7.12
 
 # Keep upstart from complaining
 RUN dpkg-divert --local --rename --add /sbin/initctl
