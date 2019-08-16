@@ -23,6 +23,7 @@ RUN apt-get install -y \
     libapache2-mod-php \
     libapache2-mod-webauthldap \
     php \
+    php-bcmath \
     php-curl \
     php-gd \
     php-intl \
