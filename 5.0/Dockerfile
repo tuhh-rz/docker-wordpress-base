@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 
-ENV WORDPRESS_VERSION 5.0.7
+ENV WORDPRESS_VERSION 5.0.8
 
 # Keep upstart from complaining
 RUN dpkg-divert --local --rename --add /sbin/initctl
