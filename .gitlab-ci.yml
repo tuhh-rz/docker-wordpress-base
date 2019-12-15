@@ -7,7 +7,7 @@ variables:
     - pwd
     - key="Wordpress ${VERSION}"
     - build_version=$(curl -s https://cgi.tu-harburg.de/~rztwww/Software/program_file.json | jq --arg KEY "$key" --raw-output '.[$KEY] | .version')
-    - if [[ -z $build_version ]]; then build_version="$VERSION" fi
+    - if [[ -z $build_version ]]; then build_version="$VERSION"; fi
     - echo "Build: ${build_version}"
     - sudo docker build --build-arg VERSION="${build_version}" --no-cache --pull --tag "${CONTAINER_RELEASE_IMAGE}":"${VERSION}${VARIANT:+-$VARIANT}" "${VERSION}"/"${VARIANT}"
 
