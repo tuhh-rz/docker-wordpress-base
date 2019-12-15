@@ -6,8 +6,10 @@ variables:
   script: &build_script_definition
     - pwd
     - key="Wordpress ${VERSION}"
-    - curl -s https://cgi.tu-harburg.de/~rztwww/Software/program_file.json | jq --arg KEY "$key" --raw-output '.[$KEY] | .version'
-    - sudo docker build --no-cache --pull -t "${CONTAINER_RELEASE_IMAGE}":"${VERSION}${VARIANT:+-$VARIANT}" "${VERSION}"/"${VARIANT}"
+    - build_version=$(curl -s https://cgi.tu-harburg.de/~rztwww/Software/program_file.json | jq --arg KEY "$key" --raw-output '.[$KEY] | .version')
+    - if [[ -z $build_version ]]; then build_version="$VERSION" fi
+    - echo "Build: ${build_version}"
+    - sudo docker build --build-arg VERSION="${build_version}" --no-cache --pull --tag "${CONTAINER_RELEASE_IMAGE}":"${VERSION}${VARIANT:+-$VARIANT}" "${VERSION}"/"${VARIANT}"
 
 .build_before_script_template:
   before_script: &build_before_script_definition
