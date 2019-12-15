@@ -1,6 +1,7 @@
 FROM ubuntu:18.04
 
 # ENV VERSION 5.0.8
+ARG VERSION=5.0
 RUN echo $VERSION
 
 # Keep upstart from complaining
