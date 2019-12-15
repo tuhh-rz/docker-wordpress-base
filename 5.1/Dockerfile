@@ -1,6 +1,9 @@
 FROM ubuntu:18.04
 
-ENV WORDPRESS_VERSION 5.1.4
+# ENV VERSION 5.1.4
+ARG VERSION=5.1
+RUN echo $VERSION
+
 
 # Keep upstart from complaining
 RUN dpkg-divert --local --rename --add /sbin/initctl
@@ -42,8 +45,8 @@ RUN apt-get install -y \
 
 # WordPress herunter laden
 RUN mkdir -p /opt/wordpress
-RUN wget https://wordpress.org/wordpress-${WORDPRESS_VERSION}.tar.gz --directory-prefix /tmp
-RUN tar zxvf /tmp/wordpress-${WORDPRESS_VERSION}.tar.gz -C /opt/wordpress
+RUN wget https://wordpress.org/wordpress-${VERSION}.tar.gz --directory-prefix /tmp
+RUN tar zxvf /tmp/wordpress-${VERSION}.tar.gz -C /opt/wordpress
 
 # WordPress CLI installieren
 RUN mkdir -p /opt/wp-cli
