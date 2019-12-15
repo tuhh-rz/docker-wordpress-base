@@ -5,7 +5,8 @@ variables:
 .build_script_template:
   script: &build_script_definition
     - pwd
-    - curl -s https://cgi.tu-harburg.de/~rztwww/Software/program_file.json
+    - key="Wordpress ${VERSION}"
+    - curl -s https://cgi.tu-harburg.de/~rztwww/Software/program_file.json | jq --raw-output '.[env.key] | .version'
     - sudo docker build --no-cache --pull -t "${CONTAINER_RELEASE_IMAGE}":"${VERSION}${VARIANT:+-$VARIANT}" "${VERSION}"/"${VARIANT}"
 
 .build_before_script_template:
