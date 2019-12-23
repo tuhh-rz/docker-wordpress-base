@@ -1,7 +1,7 @@
 FROM ubuntu:16.04
 
-# ENV VERSION 4.9.13
-ARG VERSION=4.9
+ARG VERSION=${VERSION:-4.9}
+ENV VERSION=$VERSION
 RUN echo $VERSION
 
 # Keep upstart from complaining
