@@ -1,7 +1,6 @@
 {
     "active": true,
-    "registries": [
-        {
+    "registries": [{
             "name": "collaborating.tuhh.de:5005",
             "state": "ignore"
         },
@@ -24,6 +23,9 @@
             "action": "build"
         },
         "5.3": {
+            "action": "build"
+        },
+        "5.4": {
             "action": "build"
         }
     }
