@@ -351,7 +351,7 @@ deploy:branches:5.4:
   needs: ["build:branches:5.4"]
   tags:
     - deploy
- rules:
+  rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
   variables:
     VERSION: "5.4"
