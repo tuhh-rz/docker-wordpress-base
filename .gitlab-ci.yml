@@ -406,7 +406,7 @@ build:branches:5.5:
 
 deploy:branches:5.5:
   variables:
-    NO_DEPLOY: $foobar
+    NO_DEPLOY: "$foobar"
   stage: deploy
   needs: ["build:branches:5.5"]
   tags:
