@@ -1,8 +1,12 @@
 FROM ubuntu:18.04
 
-ARG VERSION=${VERSION:-5.0}
+ARG VERSION=${VERSION}
 ENV VERSION=$VERSION
 RUN echo $VERSION
+
+ARG DOWNLOAD=${DOWNLOAD}
+ENV DOWNLOAD=$DOWNLOAD
+RUN echo $DOWNLOAD
 
 # Keep upstart from complaining
 RUN dpkg-divert --local --rename --add /sbin/initctl
@@ -11,8 +15,7 @@ RUN ln -sf /bin/true /sbin/initctl
 # Let the conatiner know that there is no tty
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update
-RUN apt-get -y upgrade
+RUN apt-get update && apt-get -y upgrade
  
 # Requirements
 RUN apt-get install -y \
@@ -43,9 +46,8 @@ RUN apt-get install -y \
     wget
 
 # WordPress herunter laden
-RUN mkdir -p /opt/wordpress
-RUN wget https://wordpress.org/wordpress-${VERSION}.tar.gz --directory-prefix /tmp
-RUN tar zxvf /tmp/wordpress-${VERSION}.tar.gz -C /opt/wordpress
+RUN curl $DOWNLOAD |\
+  tar -xzC /opt
 
 # WordPress CLI installieren
 RUN mkdir -p /opt/wp-cli
