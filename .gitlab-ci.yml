@@ -21,7 +21,7 @@ variables:
 .build_branches_script_template:
   script: &build_branches_script_definition
     - structure=$(curl -s ${APP_OVERVIEW_URL} | jq --arg KEY "$KEY" --arg APP "$APP" --raw-output '.[$APP] | .[$KEY]')
-    - if [[ -z "$structure" ]] || [[ $structure == "null" ]]; then echo "UNKNOWN $APP $KEY"; echo "DEPLOY=false" >> build.env; exit 0; fi
+    - if [[ -z "$structure" ]] || [[ $structure == "null" ]]; then echo "UNKNOWN $APP $KEY"; echo "DEPLOY=nix" >> build.env; exit 0; fi
 
     - version=$(jq --raw-output '.version' <<<"$structure")
     - if [[ -z $version ]] || [[ $version == "null" ]]; then exit 1; fi
@@ -406,7 +406,8 @@ deploy:branches:5.5:
     - deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
-    - if: '$DEPLOY != "false"'
+    - if: '$DEPLOY != "nix"'
+      allow_failure: true
   variables:
     VERSION: "5.5"
     VARIANT: ""
