@@ -406,10 +406,8 @@ deploy:branches:5.5:
   tags:
     - deploy
   rules:
-    - if: '$CI_COMMIT_REF_NAME != "master" && $NO_DEPLOY == "true"'
+    - if: '$CI_COMMIT_REF_NAME != "master" && $NO_DEPLOY == "false"'
       when: never
-    - if: '$CI_COMMIT_REF_NAME != "master" && $NO_DEPLOY != "true"'
-      when: always
   variables:
     VERSION: "5.5"
     VARIANT: ""
