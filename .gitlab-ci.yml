@@ -22,7 +22,7 @@ variables:
 .build_branches_script_template:
   script: &build_branches_script_definition
     - structure=$(curl -s ${APP_OVERVIEW_URL} | jq --arg KEY "$KEY" --arg APP "$APP" --raw-output '.[$APP] | .[$KEY]')
-    - if [[ -z "$structure" ]] || [[ $structure == "null" ]]; then echo "UNKNOWN $APP $KEY"; echo "NO_DEPLOY=true" >> build.env; exit 0; fi
+    - if [[ -z "$structure" ]] || [[ $structure == "null" ]]; then echo "UNKNOWN $APP $KEY"; exit 0; fi
 
     - version=$(jq --raw-output '.version' <<<"$structure")
     - if [[ -z $version ]] || [[ $version == "null" ]]; then exit 1; fi
