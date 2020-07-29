@@ -410,7 +410,9 @@ deploy:branches:5.5:
   variables:
     VERSION: "5.5"
     VARIANT: ""
-  script: *deploy_branches_script_definition
+  script: 
+    - *deploy_branches_script_definition
+    - echo $DEPLOY
 
 build_siblings:
   stage: build_siblings
