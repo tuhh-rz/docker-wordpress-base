@@ -63,8 +63,10 @@ build:4.9:
   variables:
     VERSION: "4.9"
     VARIANT: ""
-  before_script: *build_before_script_definition
-  script: *build_script_definition
+  before_script:
+    - *build_before_script_definition
+  script: 
+    - *build_script_definition
 
 deploy:4.9:
   stage: deploy
@@ -400,8 +402,6 @@ build:branches:5.5:
       dotenv: build.env
 
 deploy:branches:5.5:
-  variables:
-    NO_DEPLOY: "$foobar"
   stage: deploy
   needs: ["build:branches:5.5"]
   tags:
