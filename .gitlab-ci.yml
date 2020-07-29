@@ -4,7 +4,6 @@ variables:
     APP: 'WordPress'
     APP_OVERVIEW_URL: https://cgi.tu-harburg.de/~rztwww/Software/program_file.json
     KEY: "${APP} ${VERSION}"
-    NO_DEPLOY: "false"
 
 .build_script_template:
   script: &build_script_definition
