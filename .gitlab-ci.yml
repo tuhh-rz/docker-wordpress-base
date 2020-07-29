@@ -21,7 +21,7 @@ variables:
 .build_branches_script_template:
   script: &build_branches_script_definition
     - structure=$(curl -s ${APP_OVERVIEW_URL} | jq --arg KEY "$KEY" --arg APP "$APP" --raw-output '.[$APP] | .[$KEY]')
-    - if [[ -z "$structure" ]] || [[ $structure == "null" ]]; then echo "UNKNOWN $APP $KEY"; exit 0; fi
+    - if [[ -z "$structure" ]] || [[ $structure == "null" ]]; then echo "UNKNOWN $APP $KEY"; echo "DEPLOY=false" >> build.env; exit 0; fi
 
     - version=$(jq --raw-output '.version' <<<"$structure")
     - if [[ -z $version ]] || [[ $version == "null" ]]; then exit 1; fi
@@ -86,10 +86,8 @@ deploy:4.9:
 build:branches:4.9:
   stage: build
   retry: 2
-  only:
-    - branches
-  except:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "master"'
   tags:
     - build
   variables:
@@ -103,10 +101,8 @@ deploy:branches:4.9:
   needs: ["build:branches:4.9"]
   tags:
     - deploy
-  only:
-    - branches
-  except:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "master"'
   variables:
     VERSION: "4.9"
     VARIANT: ""
@@ -140,10 +136,8 @@ deploy:5.0:
 build:branches:5.0:
   stage: build
   retry: 2
-  only:
-    - branches
-  except:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "master"'
   tags:
     - build
   variables:
@@ -157,10 +151,8 @@ deploy:branches:5.0:
   needs: ["build:branches:5.0"]
   tags:
     - deploy
-  only:
-    - branches
-  except:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "master"'
   variables:
     VERSION: "5.0"
     VARIANT: ""
@@ -194,10 +186,8 @@ deploy:5.1:
 build:branches:5.1:
   stage: build
   retry: 2
-  only:
-    - branches
-  except:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "master"'
   tags:
     - build
   variables:
@@ -211,10 +201,8 @@ deploy:branches:5.1:
   needs: ["build:branches:5.1"]
   tags:
     - deploy
-  only:
-    - branches
-  except:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "master"'
   variables:
     VERSION: "5.1"
     VARIANT: ""
@@ -248,10 +236,8 @@ deploy:5.2:
 build:branches:5.2:
   stage: build
   retry: 2
-  only:
-    - branches
-  except:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "master"'
   tags:
     - build
   variables:
@@ -265,10 +251,8 @@ deploy:branches:5.2:
   needs: ["build:branches:5.2"]
   tags:
     - deploy
-  only:
-    - branches
-  except:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "master"'
   variables:
     VERSION: "5.2"
     VARIANT: ""
@@ -302,10 +286,8 @@ deploy:5.3:
 build:branches:5.3:
   stage: build
   retry: 2
-  only:
-    - branches
-  except:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "master"'
   tags:
     - build
   variables:
@@ -319,10 +301,8 @@ deploy:branches:5.3:
   needs: ["build:branches:5.3"]
   tags:
     - deploy
-  only:
-    - branches
-  except:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "master"'
   variables:
     VERSION: "5.3"
     VARIANT: ""
@@ -356,10 +336,8 @@ deploy:5.4:
 build:branches:5.4:
   stage: build
   retry: 2
-  only:
-    - branches
-  except:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "master"'
   tags:
     - build
   variables:
@@ -373,10 +351,8 @@ deploy:branches:5.4:
   needs: ["build:branches:5.4"]
   tags:
     - deploy
-  only:
-    - branches
-  except:
-    - master
+ rules:
+    - if: '$CI_COMMIT_REF_NAME != "master"'
   variables:
     VERSION: "5.4"
     VARIANT: ""
@@ -410,10 +386,8 @@ deploy:5.5:
 build:branches:5.5:
   stage: build
   retry: 2
-  only:
-    - branches
-  except:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "master"'
   tags:
     - build
   variables:
@@ -421,16 +395,18 @@ build:branches:5.5:
     VARIANT: ""
   before_script: *build_branches_before_script_definition
   script: *build_branches_script_definition
+  artifacts:
+    reports:
+      dotenv: build.env
 
 deploy:branches:5.5:
   stage: deploy
   needs: ["build:branches:5.5"]
   tags:
     - deploy
-  only:
-    - branches
-  except:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "master"'
+    - if: '$DEPLOY != "false"'
   variables:
     VERSION: "5.5"
     VARIANT: ""
@@ -440,8 +416,8 @@ build_siblings:
   stage: build_siblings
   tags:
     - build
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
   script:
     - "curl -X POST --silent --show-error --fail -F token=${TRIGGER_BUILD_TOKEN_MASTER_1944} -F ref=${CI_COMMIT_REF_NAME}  https://collaborating.tuhh.de/api/v4/projects/1944/trigger/pipeline"
     - "curl -X POST --silent --show-error --fail -F token=${TRIGGER_BUILD_TOKEN_MASTER_1943} -F ref=${CI_COMMIT_REF_NAME}  https://collaborating.tuhh.de/api/v4/projects/1943/trigger/pipeline"
