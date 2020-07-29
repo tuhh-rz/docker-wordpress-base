@@ -5,32 +5,24 @@ variables:
     APP_OVERVIEW_URL: https://cgi.tu-harburg.de/~rztwww/Software/program_file.json
     KEY: "${APP} ${VERSION}"
 
-.build_script_template:
-  script: &build_script_definition
-    - pwd
+.set_version_and_download: &set_version_and_download
+  - structure=$(curl -s ${APP_OVERVIEW_URL} | jq --arg KEY "$KEY" --arg APP "$APP" --raw-output '.[$APP] | .[$KEY]')
+  - if [[ -z "$structure" ]] || [[ $structure == "null" ]]; then echo "UNKNOWN $APP $KEY"; exit 0; fi
 
-    - version=$(curl -s ${APP_OVERVIEW_URL} | jq --arg KEY "$KEY" --arg APP "$APP" --raw-output '.[$APP] | .[$KEY] | .version')
-    - if [[ -z $version ]] || [[ $version == "null" ]]; then exit 1; fi
-    - version=$(echo $version | sed -e 's/%2B/+/g')
+  - version=$(jq --raw-output '.version' <<<"$structure")
+  - if [[ -z $version ]] || [[ $version == "null" ]]; then exit 1; fi
+  - version=$(echo $version | sed -e 's/%2B/+/g')
 
-    - download=$(curl -s ${APP_OVERVIEW_URL} | jq --arg KEY "$KEY" --arg APP "$APP" --raw-output '.[$APP] | .[$KEY] | .download')
-    - if [[ -z $download ]] || [[ $download == "null" ]]; then exit 1; fi
+  - download=$(jq --raw-output '.download' <<<"$structure")
+  - if [[ -z $download ]] || [[ $download == "null" ]]; then exit 1; fi
 
-    - sudo docker build --build-arg DOWNLOAD="${download}" --build-arg VERSION="${version}" --no-cache --pull -t "${CONTAINER_RELEASE_IMAGE}":"${VERSION}${VARIANT:+-$VARIANT}" "${VERSION}"/"${VARIANT}"
+.build_script_template: &build_script_definition
+  - *set_version_and_download
+  - sudo docker build --build-arg DOWNLOAD="${download}" --build-arg VERSION="${version}" --no-cache --pull -t "${CONTAINER_RELEASE_IMAGE}":"${VERSION}${VARIANT:+-$VARIANT}" "${VERSION}"/"${VARIANT}"
 
-.build_branches_script_template:
-  script: &build_branches_script_definition
-    - structure=$(curl -s ${APP_OVERVIEW_URL} | jq --arg KEY "$KEY" --arg APP "$APP" --raw-output '.[$APP] | .[$KEY]')
-    - if [[ -z "$structure" ]] || [[ $structure == "null" ]]; then echo "UNKNOWN $APP $KEY"; echo "foobar=true" >> build.env; exit 0; fi
-
-    - version=$(jq --raw-output '.version' <<<"$structure")
-    - if [[ -z $version ]] || [[ $version == "null" ]]; then exit 1; fi
-    - version=$(echo $version | sed -e 's/%2B/+/g')
-
-    - download=$(jq --raw-output '.download' <<<"$structure")
-    - if [[ -z $download ]] || [[ $download == "null" ]]; then exit 1; fi
-
-    - sudo docker build --build-arg DOWNLOAD="${download}" --build-arg VERSION="${version}" --pull -t "${CONTAINER_RELEASE_IMAGE}":"${VERSION}${VARIANT:+-$VARIANT}"_"${CI_COMMIT_REF_NAME}" "${VERSION}"/"${VARIANT}"
+.build_branches_script_template: &build_branches_script_definition
+  - *set_version_and_download
+  - sudo docker build --build-arg DOWNLOAD="${download}" --build-arg VERSION="${version}" --pull -t "${CONTAINER_RELEASE_IMAGE}":"${VERSION}${VARIANT:+-$VARIANT}"_"${CI_COMMIT_REF_NAME}" "${VERSION}"/"${VARIANT}"
 
 .build_before_script_template:
     before_script:  &build_before_script_definition
@@ -412,13 +404,11 @@ deploy:branches:5.5:
   tags:
     - deploy
   rules:
-    - if: '$CI_COMMIT_REF_NAME != "master" && $NO_DEPLOY != "true"'
+    - if: '$CI_COMMIT_REF_NAME != "master"'
   variables:
     VERSION: "5.5"
     VARIANT: ""
   script:
-    - echo $foobar
-    - echo $NO_DEPLOY 
     - *deploy_branches_script_definition
 
 build_siblings:
