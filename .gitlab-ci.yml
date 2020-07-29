@@ -406,6 +406,7 @@ deploy:branches:5.5:
     - deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master" && $DEPLOY != "nix"'
+      when: manual
   variables:
     VERSION: "5.5"
     VARIANT: ""
