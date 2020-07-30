@@ -8,7 +8,7 @@ variables:
 .before_script: &before_script
   - structure=$(curl -s ${APP_OVERVIEW_URL} | jq --arg KEY "$KEY" --arg APP "$APP" --raw-output '.[$APP] | .[$KEY]')
   - echo $structure
-  - if [[ -z "$structure" ]] || [[ $structure == "null" ]]; then echo "UNKNOWN $APP $KEY" > before_script.out; fi
+  - if [[ -z "$structure" ]] || [[ $structure == "null" ]] || [[ $structure == "{}" ]]; then echo "UNKNOWN $APP $KEY" > before_script.out; exit 0; fi
 
   - version=$(jq --raw-output '.version' <<<"$structure")
   - if [[ -z $version ]] || [[ $version == "null" ]]; then exit 1; fi
@@ -355,6 +355,10 @@ build:5.5:
     - *before_script
   script: 
     - *build_script
+  artifacts:
+    paths:
+      - before_script.out
+
 
 deploy:5.5:
   stage: deploy
@@ -381,8 +385,13 @@ build:branches:5.5:
     VARIANT: ""
   before_script: 
     - *before_script
-  script: 
+  script:
+    - cat before_script.out
     - *build_branches_script
+  artifacts:
+    paths:
+      - before_script.out
+
 
 deploy:branches:5.5:
   stage: deploy
