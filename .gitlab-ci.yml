@@ -7,15 +7,15 @@ variables:
 
 .before_script: &before_script
   - structure=$(curl -s ${APP_OVERVIEW_URL} | jq --arg KEY "$KEY" --arg APP "$APP" --raw-output '.[$APP] | .[$KEY]')
+  - if [[ -z "$structure" ]] || [[ $structure == "null" ]] || [[ $structure == "{}" ]]; then echo "UNKNOWN $APP $KEY"; exit 1; fi
   - echo $structure
-  - if [[ -z "$structure" ]] || [[ $structure == "null" ]] || [[ $structure == "{}" ]]; then echo "UNKNOWN $APP $KEY" > before_script.out; exit 0; fi
 
   - version=$(jq --raw-output '.version' <<<"$structure")
-  - if [[ -z $version ]] || [[ $version == "null" ]]; then exit 1; fi
+  - if [[ -z $version ]] || [[ $version == "null" ]]; then echo "NO VERSION"; exit 1; fi
   - version=$(echo $version | sed -e 's/%2B/+/g')
   
   - download=$(jq --raw-output '.download' <<<"$structure")
-  - if [[ -z $download ]] || [[ $download == "null" ]]; then exit 1; fi
+  - if [[ -z $download ]] || [[ $download == "null" ]]; then echo "NO DOWNLOAD"; exit 1; fi
 
 .build_script: &build_script
   - sudo docker build --build-arg DOWNLOAD="${download}" --build-arg VERSION="${version}" --no-cache --pull -t "${CONTAINER_RELEASE_IMAGE}":"${VERSION}${VARIANT:+-$VARIANT}" "${VERSION}"/"${VARIANT}"
@@ -355,10 +355,6 @@ build:5.5:
     - *before_script
   script: 
     - *build_script
-  artifacts:
-    paths:
-      - before_script.out
-
 
 deploy:5.5:
   stage: deploy
@@ -386,12 +382,7 @@ build:branches:5.5:
   before_script: 
     - *before_script
   script:
-    - cat before_script.out
     - *build_branches_script
-  artifacts:
-    paths:
-      - before_script.out
-
 
 deploy:branches:5.5:
   stage: deploy
