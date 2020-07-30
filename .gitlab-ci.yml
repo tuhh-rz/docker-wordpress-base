@@ -8,20 +8,18 @@ variables:
 .prepare_download_n_version: &prepare_download_n_version
   - structure=$(curl -s ${APP_OVERVIEW_URL} | jq --arg KEY "$KEY" --arg APP "$APP" --raw-output '.[$APP] | .[$KEY]')
   - if [[ -z "$structure" ]] || [[ $structure == "null" ]] || [[ $structure == "" ]]; then echo "UNKNOWN $APP $KEY"; exit 0; fi
-
   - version=$(jq --raw-output '.version' <<<"$structure")
   - if [[ -z $version ]] || [[ $version == "null" ]]; then exit 1; fi
   - version=$(echo $version | sed -e 's/%2B/+/g')
-
   - download=$(jq --raw-output '.download' <<<"$structure")
   - if [[ -z $download ]] || [[ $download == "null" ]]; then exit 1; fi
 
 .build_script_template: &build_script_definition
-  - echo prepare_download_n_version
+  - *prepare_download_n_version
   - sudo docker build --build-arg DOWNLOAD="${download}" --build-arg VERSION="${version}" --no-cache --pull -t "${CONTAINER_RELEASE_IMAGE}":"${VERSION}${VARIANT:+-$VARIANT}" "${VERSION}"/"${VARIANT}"
 
 .build_branches_script_template: &build_branches_script_definition
-  - echo prepare_download_n_version
+  - *prepare_download_n_version
   - sudo docker build --build-arg DOWNLOAD="${download}" --build-arg VERSION="${version}" --pull -t "${CONTAINER_RELEASE_IMAGE}":"${VERSION}${VARIANT:+-$VARIANT}"_"${CI_COMMIT_REF_NAME}" "${VERSION}"/"${VARIANT}"
 
 .build_before_script_template: &build_before_script_definition
