@@ -69,7 +69,8 @@ deploy:4.9:
   variables:
     VERSION: "4.9"
     VARIANT: ""
-  script: *deploy_script_definition
+  script: 
+    - *deploy_script_definition
 
 build:branches:4.9:
   stage: build
@@ -81,8 +82,10 @@ build:branches:4.9:
   variables:
     VERSION: "4.9"
     VARIANT: ""
-  before_script: *build_branches_before_script_definition
-  script: *build_branches_script_definition
+  before_script: 
+    - *build_branches_before_script_definition
+  script: 
+    - *build_branches_script_definition
 
 deploy:branches:4.9:
   stage: deploy
@@ -94,7 +97,8 @@ deploy:branches:4.9:
   variables:
     VERSION: "4.9"
     VARIANT: ""
-  script: *deploy_branches_script_definition
+  script: 
+    - *deploy_branches_script_definition
 
 build:5.0:
   stage: build
