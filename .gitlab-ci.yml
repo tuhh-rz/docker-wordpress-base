@@ -390,7 +390,8 @@ deploy:branches:5.5:
   tags:
     - deploy
   rules:
-    - if: '$CI_COMMIT_REF_NAME != "master"'
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      when: never
   variables:
     VERSION: "5.5"
     VARIANT: ""
