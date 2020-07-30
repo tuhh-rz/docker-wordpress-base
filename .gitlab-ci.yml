@@ -5,38 +5,30 @@ variables:
   APP_OVERVIEW_URL: https://cgi.tu-harburg.de/~rztwww/Software/program_file.json
   KEY: "${APP} ${VERSION}"
 
-.prepare_download_n_version: &prepare_download_n_version
+.before_script: &before_script
   - structure=$(curl -s ${APP_OVERVIEW_URL} | jq --arg KEY "$KEY" --arg APP "$APP" --raw-output '.[$APP] | .[$KEY]')
   - if [[ -z "$structure" ]] || [[ $structure == "null" ]] || [[ $structure == "" ]]; then echo "UNKNOWN $APP $KEY"; exit 0; fi
+
   - version=$(jq --raw-output '.version' <<<"$structure")
   - if [[ -z $version ]] || [[ $version == "null" ]]; then exit 1; fi
   - version=$(echo $version | sed -e 's/%2B/+/g')
+  
   - download=$(jq --raw-output '.download' <<<"$structure")
   - if [[ -z $download ]] || [[ $download == "null" ]]; then exit 1; fi
 
-.build_script_template: &build_script_definition
+.build_script: &build_script
   - prepare_download_n_version
   - sudo docker build --build-arg DOWNLOAD="${download}" --build-arg VERSION="${version}" --no-cache --pull -t "${CONTAINER_RELEASE_IMAGE}":"${VERSION}${VARIANT:+-$VARIANT}" "${VERSION}"/"${VARIANT}"
 
-.build_branches_script_template: &build_branches_script_definition
+.build_branches_script: &build_branches_script
   - prepare_download_n_version
   - sudo docker build --build-arg DOWNLOAD="${download}" --build-arg VERSION="${version}" --pull -t "${CONTAINER_RELEASE_IMAGE}":"${VERSION}${VARIANT:+-$VARIANT}"_"${CI_COMMIT_REF_NAME}" "${VERSION}"/"${VARIANT}"
 
-.build_before_script_template: &build_before_script_definition
-  - pwd
-  - git submodule update --init --recursive
-
-.deploy_script_template: &deploy_script_definition
-  - pwd
+.deploy_script: &deploy_script
   - sudo docker push "${CONTAINER_RELEASE_IMAGE}":"${VERSION}${VARIANT:+-$VARIANT}"
   - if [ ! -z ${LATEST_VERSION} ] && [ "${LATEST_VERSION}" == "${VERSION}${VARIANT:+-$VARIANT}" ]; then sudo docker tag "${CONTAINER_RELEASE_IMAGE}":"${VERSION}${VARIANT:+-$VARIANT}" "${CONTAINER_RELEASE_IMAGE}:latest"; sudo docker push "${CONTAINER_RELEASE_IMAGE}:latest"; fi
 
-.build_branches_before_script_template: &build_branches_before_script_definition
-  - pwd
-  - git submodule update --init --recursive
-
-.deploy_branches_script_template: &deploy_branches_script_definition
-  - pwd
+.deploy_branches_script: &deploy_branches_script
   - sudo docker push "${CONTAINER_RELEASE_IMAGE}":"${VERSION}${VARIANT:+-$VARIANT}"_"${CI_COMMIT_REF_NAME}"
 
 stages:
@@ -55,9 +47,9 @@ build:4.9:
     VERSION: "4.9"
     VARIANT: ""
   before_script:
-    - *build_before_script_definition
+    - *before_script
   script: 
-    - *build_script_definition
+    - *build_script
 
 deploy:4.9:
   stage: deploy
@@ -70,7 +62,7 @@ deploy:4.9:
     VERSION: "4.9"
     VARIANT: ""
   script: 
-    - *deploy_script_definition
+    - *deploy_script
 
 build:branches:4.9:
   stage: build
@@ -83,9 +75,9 @@ build:branches:4.9:
     VERSION: "4.9"
     VARIANT: ""
   before_script: 
-    - *build_branches_before_script_definition
+    - *before_script
   script: 
-    - *build_branches_script_definition
+    - *build_branches_script
 
 deploy:branches:4.9:
   stage: deploy
@@ -98,7 +90,7 @@ deploy:branches:4.9:
     VERSION: "4.9"
     VARIANT: ""
   script: 
-    - *deploy_branches_script_definition
+    - *deploy_branches_script
 
 build:5.0:
   stage: build
@@ -110,8 +102,8 @@ build:5.0:
   variables:
     VERSION: "5.0"
     VARIANT: ""
-  before_script: *build_before_script_definition
-  script: *build_script_definition
+  before_script: *before_script
+  script: *build_script
 
 deploy:5.0:
   stage: deploy
@@ -123,7 +115,7 @@ deploy:5.0:
   variables:
     VERSION: "5.0"
     VARIANT: ""
-  script: *deploy_script_definition
+  script: *deploy_script
 
 build:branches:5.0:
   stage: build
@@ -135,8 +127,8 @@ build:branches:5.0:
   variables:
     VERSION: "5.0"
     VARIANT: ""
-  before_script: *build_branches_before_script_definition
-  script: *build_branches_script_definition
+  before_script: *before_script
+  script: *build_branches_script
 
 deploy:branches:5.0:
   stage: deploy
@@ -148,7 +140,7 @@ deploy:branches:5.0:
   variables:
     VERSION: "5.0"
     VARIANT: ""
-  script: *deploy_branches_script_definition
+  script: *deploy_branches_script
 
 build:5.1:
   stage: build
@@ -160,8 +152,8 @@ build:5.1:
   variables:
     VERSION: "5.1"
     VARIANT: ""
-  before_script: *build_before_script_definition
-  script: *build_script_definition
+  before_script: *before_script
+  script: *build_script
 
 deploy:5.1:
   stage: deploy
@@ -173,7 +165,7 @@ deploy:5.1:
   variables:
     VERSION: "5.1"
     VARIANT: ""
-  script: *deploy_script_definition
+  script: *deploy_script
 
 build:branches:5.1:
   stage: build
@@ -185,8 +177,8 @@ build:branches:5.1:
   variables:
     VERSION: "5.1"
     VARIANT: ""
-  before_script: *build_branches_before_script_definition
-  script: *build_branches_script_definition
+  before_script: *before_script
+  script: *build_branches_script
 
 deploy:branches:5.1:
   stage: deploy
@@ -198,7 +190,7 @@ deploy:branches:5.1:
   variables:
     VERSION: "5.1"
     VARIANT: ""
-  script: *deploy_branches_script_definition
+  script: *deploy_branches_script
 
 build:5.2:
   stage: build
@@ -210,8 +202,8 @@ build:5.2:
   variables:
     VERSION: "5.2"
     VARIANT: ""
-  before_script: *build_before_script_definition
-  script: *build_script_definition
+  before_script: *before_script
+  script: *build_script
 
 deploy:5.2:
   stage: deploy
@@ -223,7 +215,7 @@ deploy:5.2:
   variables:
     VERSION: "5.2"
     VARIANT: ""
-  script: *deploy_script_definition
+  script: *deploy_script
 
 build:branches:5.2:
   stage: build
@@ -235,8 +227,8 @@ build:branches:5.2:
   variables:
     VERSION: "5.2"
     VARIANT: ""
-  before_script: *build_branches_before_script_definition
-  script: *build_branches_script_definition
+  before_script: *before_script
+  script: *build_branches_script
 
 deploy:branches:5.2:
   stage: deploy
@@ -248,7 +240,7 @@ deploy:branches:5.2:
   variables:
     VERSION: "5.2"
     VARIANT: ""
-  script: *deploy_branches_script_definition
+  script: *deploy_branches_script
 
 build:5.3:
   stage: build
@@ -260,8 +252,8 @@ build:5.3:
   variables:
     VERSION: "5.3"
     VARIANT: ""
-  before_script: *build_before_script_definition
-  script: *build_script_definition
+  before_script: *before_script
+  script: *build_script
 
 deploy:5.3:
   stage: deploy
@@ -273,7 +265,7 @@ deploy:5.3:
   variables:
     VERSION: "5.3"
     VARIANT: ""
-  script: *deploy_script_definition
+  script: *deploy_script
 
 build:branches:5.3:
   stage: build
@@ -285,8 +277,8 @@ build:branches:5.3:
   variables:
     VERSION: "5.3"
     VARIANT: ""
-  before_script: *build_branches_before_script_definition
-  script: *build_branches_script_definition
+  before_script: *before_script
+  script: *build_branches_script
 
 deploy:branches:5.3:
   stage: deploy
@@ -298,7 +290,7 @@ deploy:branches:5.3:
   variables:
     VERSION: "5.3"
     VARIANT: ""
-  script: *deploy_branches_script_definition
+  script: *deploy_branches_script
 
 build:5.4:
   stage: build
@@ -310,8 +302,8 @@ build:5.4:
   variables:
     VERSION: "5.4"
     VARIANT: ""
-  before_script: *build_before_script_definition
-  script: *build_script_definition
+  before_script: *before_script
+  script: *build_script
 
 deploy:5.4:
   stage: deploy
@@ -323,7 +315,7 @@ deploy:5.4:
   variables:
     VERSION: "5.4"
     VARIANT: ""
-  script: *deploy_script_definition
+  script: *deploy_script
 
 build:branches:5.4:
   stage: build
@@ -335,8 +327,8 @@ build:branches:5.4:
   variables:
     VERSION: "5.4"
     VARIANT: ""
-  before_script: *build_branches_before_script_definition
-  script: *build_branches_script_definition
+  before_script: *before_script
+  script: *build_branches_script
 
 deploy:branches:5.4:
   stage: deploy
@@ -348,7 +340,7 @@ deploy:branches:5.4:
   variables:
     VERSION: "5.4"
     VARIANT: ""
-  script: *deploy_branches_script_definition
+  script: *deploy_branches_script
 
 build:5.5:
   stage: build
@@ -361,9 +353,9 @@ build:5.5:
     VERSION: "5.5"
     VARIANT: ""
   before_script: 
-    - *build_before_script_definition
+    - *before_script
   script: 
-    - *build_script_definition
+    - *build_script
 
 deploy:5.5:
   stage: deploy
@@ -376,7 +368,7 @@ deploy:5.5:
     VERSION: "5.5"
     VARIANT: ""
   script: 
-    - *deploy_script_definition
+    - *deploy_script
 
 build:branches:5.5:
   stage: build
@@ -389,9 +381,9 @@ build:branches:5.5:
     VERSION: "5.5"
     VARIANT: ""
   before_script: 
-    - *build_branches_before_script_definition
+    - *before_script
   script: 
-    - *build_branches_script_definition
+    - *build_branches_script
   artifacts:
     reports:
       dotenv: build.env
@@ -407,7 +399,7 @@ deploy:branches:5.5:
     VERSION: "5.5"
     VARIANT: ""
   script:
-    - *deploy_branches_script_definition
+    - *deploy_branches_script
 
 build_siblings:
   stage: build_siblings
