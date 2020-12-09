@@ -1,6 +1,7 @@
 variables:
   CONTAINER_RELEASE_IMAGE: docker.rz.tu-harburg.de/$CI_PROJECT_NAMESPACE/$CI_PROJECT_NAME
-  LATEST_VERSION: "5.4"
+  LATEST_VERSION: "5.6"
+  MAPPING: "4:4.9,5:5.6"
   APP: 'WordPress'
   APP_OVERVIEW_URL: https://cgi.tu-harburg.de/~rztwww/Software/program_file.json
   KEY: "${APP} ${VERSION}"
@@ -353,7 +354,7 @@ build:5.5:
     VARIANT: ""
   before_script: 
     - *before_script
-  script: 
+  script:
     - *build_script
 
 deploy:5.5:
@@ -379,7 +380,7 @@ build:branches:5.5:
   variables:
     VERSION: "5.5"
     VARIANT: ""
-  before_script: 
+  before_script:
     - *before_script
   script:
     - *build_branches_script
@@ -393,6 +394,62 @@ deploy:branches:5.5:
     - if: '$CI_COMMIT_REF_NAME != "master"'
   variables:
     VERSION: "5.5"
+    VARIANT: ""
+  script:
+    - *deploy_branches_script
+
+build:5.6:
+  stage: build
+  retry: 2
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+  tags:
+    - build
+  variables:
+    VERSION: "5.6"
+    VARIANT: ""
+  before_script: 
+    - *before_script
+  script:
+    - *build_script
+
+deploy:5.6:
+  stage: deploy
+  needs: ["build:5.6"]
+  tags:
+    - deploy
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+  variables:
+    VERSION: "5.6"
+    VARIANT: ""
+  script: 
+    - *deploy_script
+
+build:branches:5.6:
+  stage: build
+  retry: 2
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "master"'
+  tags:
+    - build
+  variables:
+    VERSION: "5.6"
+    VARIANT: ""
+  before_script:
+    - *before_script
+  script:
+    - *build_branches_script
+
+deploy:branches:5.6:
+  stage: deploy
+  needs: ["build:branches:5.6"]
+  tags:
+    - deploy
+  rules:
+    - if: '$CI_COMMIT_REF_NAME != "master"'
+  variables:
+    VERSION: "5.6"
     VARIANT: ""
   script:
     - *deploy_branches_script
