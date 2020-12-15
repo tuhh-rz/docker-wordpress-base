@@ -16,36 +16,36 @@ RUN ln -sf /bin/true /sbin/initctl
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get -y upgrade
- 
+
 # Requirements
 RUN apt-get install -y \
-    apache2 \
-    cron \
-    curl \
-    gawk \
-    git \
-    imagemagick \
-    libapache2-mod-php \
-    libapache2-mod-webauthldap \
-    libcurl3 \
-    libcurl3-dev \
-    php \
-    php-curl \
-    php-gd \
-    php-intl \
-    php-imagick \
-    php-ldap \
-    php-mbstring \
-    php-mysql \
-    php-pgsql \
-    php-soap \
-    php-xml \
-    php-zip \
-    rsync \
-    supervisor \
-    unzip \
-    vim \
-    wget
+  apache2 \
+  cron \
+  curl \
+  gawk \
+  git \
+  imagemagick \
+  libapache2-mod-php \
+  libapache2-mod-webauthldap \
+  libcurl3 \
+  libcurl3-dev \
+  php \
+  php-curl \
+  php-gd \
+  php-intl \
+  php-imagick \
+  php-ldap \
+  php-mbstring \
+  php-mysql \
+  php-pgsql \
+  php-soap \
+  php-xml \
+  php-zip \
+  rsync \
+  supervisor \
+  unzip \
+  vim \
+  wget
 
 # WordPress herunter laden
 RUN curl $DOWNLOAD |\
@@ -73,7 +73,6 @@ ADD ./conf/default.conf /etc/apache2/sites-enabled
 
 ADD ./conf/remoteip.conf /etc/apache2/conf-available
 
-# Crontab
 RUN echo "5 * * * * www-data /usr/bin/php /var/www/html/wp-cron.php" >> /etc/crontab
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -81,7 +80,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 EXPOSE 80 443
 
 LABEL \
-    de.tuhh.ci_repository_url=$CI_REPOSITORY_URL \
-    de.tuhh.ci_commit_short_sha=$CI_COMMIT_SHORT_SHA \
-    de.tuhh.build-date=$BUILD_DATE \
-    de.tuhh.version=$VERSION
+  de.tuhh.ci_repository_url=$CI_REPOSITORY_URL \
+  de.tuhh.ci_commit_short_sha=$CI_COMMIT_SHORT_SHA \
+  de.tuhh.build-date=$BUILD_DATE \
+  de.tuhh.version=$VERSION
