@@ -105,6 +105,8 @@ build:5.0:
   retry: 2
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - 5.0/**/*
   tags:
     - build
   variables:
@@ -120,6 +122,8 @@ deploy:5.0:
     - deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - 5.0/**/*
   variables:
     VERSION: "5.0"
     VARIANT: ""
@@ -130,6 +134,8 @@ build:branches:5.0:
   retry: 2
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
+      changes:
+        - 5.0/**/*
   tags:
     - build
   variables:
@@ -145,6 +151,8 @@ deploy:branches:5.0:
     - deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
+      changes:
+        - 5.0/**/*
   variables:
     VERSION: "5.0"
     VARIANT: ""
@@ -155,6 +163,8 @@ build:5.1:
   retry: 2
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - 5.1/**/*
   tags:
     - build
   variables:
@@ -170,6 +180,8 @@ deploy:5.1:
     - deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - 5.1/**/*
   variables:
     VERSION: "5.1"
     VARIANT: ""
@@ -180,6 +192,8 @@ build:branches:5.1:
   retry: 2
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
+      changes:
+        - 5.1/**/*
   tags:
     - build
   variables:
@@ -195,6 +209,8 @@ deploy:branches:5.1:
     - deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
+      changes:
+        - 5.1/**/*
   variables:
     VERSION: "5.1"
     VARIANT: ""
@@ -205,6 +221,8 @@ build:5.2:
   retry: 2
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - 5.2/**/*
   tags:
     - build
   variables:
@@ -220,6 +238,8 @@ deploy:5.2:
     - deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - 5.2/**/*
   variables:
     VERSION: "5.2"
     VARIANT: ""
@@ -230,6 +250,8 @@ build:branches:5.2:
   retry: 2
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
+      changes:
+        - 5.2/**/*
   tags:
     - build
   variables:
@@ -245,6 +267,8 @@ deploy:branches:5.2:
     - deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
+      changes:
+        - 5.2/**/*
   variables:
     VERSION: "5.2"
     VARIANT: ""
@@ -255,6 +279,8 @@ build:5.3:
   retry: 2
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - 5.3/**/*
   tags:
     - build
   variables:
@@ -270,6 +296,8 @@ deploy:5.3:
     - deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - 5.3/**/*
   variables:
     VERSION: "5.3"
     VARIANT: ""
@@ -280,6 +308,8 @@ build:branches:5.3:
   retry: 2
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
+      changes:
+        - 5.3/**/*
   tags:
     - build
   variables:
@@ -295,6 +325,8 @@ deploy:branches:5.3:
     - deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
+      changes:
+        - 5.3/**/*
   variables:
     VERSION: "5.3"
     VARIANT: ""
@@ -305,6 +337,8 @@ build:5.4:
   retry: 2
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - 5.4/**/*
   tags:
     - build
   variables:
@@ -320,6 +354,8 @@ deploy:5.4:
     - deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - 5.4/**/*
   variables:
     VERSION: "5.4"
     VARIANT: ""
@@ -330,6 +366,8 @@ build:branches:5.4:
   retry: 2
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
+      changes:
+        - 5.4/**/*
   tags:
     - build
   variables:
@@ -345,6 +383,8 @@ deploy:branches:5.4:
     - deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
+      changes:
+        - 5.4/**/*
   variables:
     VERSION: "5.4"
     VARIANT: ""
@@ -355,6 +395,8 @@ build:5.5:
   retry: 2
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - 5.5/**/*
   tags:
     - build
   variables:
@@ -372,6 +414,8 @@ deploy:5.5:
     - deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - 5.5/**/*
   variables:
     VERSION: "5.5"
     VARIANT: ""
@@ -383,6 +427,8 @@ build:branches:5.5:
   retry: 2
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
+      changes:
+        - 5.5/**/*
   tags:
     - build
   variables:
@@ -400,6 +446,8 @@ deploy:branches:5.5:
     - deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
+      changes:
+        - 5.5/**/*
   variables:
     VERSION: "5.5"
     VARIANT: ""
@@ -411,6 +459,8 @@ build:5.6:
   retry: 2
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - 5.6/**/*
   tags:
     - build
   variables:
@@ -428,6 +478,8 @@ deploy:5.6:
     - deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - 5.6/**/*
   variables:
     VERSION: "5.6"
     VARIANT: ""
@@ -439,6 +491,8 @@ build:branches:5.6:
   retry: 2
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
+      changes:
+        - 5.6/**/*
   tags:
     - build
   variables:
@@ -456,6 +510,8 @@ deploy:branches:5.6:
     - deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
+      changes:
+        - 5.6/**/*
   variables:
     VERSION: "5.6"
     VARIANT: ""
