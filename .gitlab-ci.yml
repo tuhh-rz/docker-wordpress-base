@@ -39,8 +39,10 @@ stages:
 build:4.9:
   stage: build
   retry: 2
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - 4.9/**/*
   tags:
     - build
   variables:
@@ -56,8 +58,10 @@ deploy:4.9:
   needs: ["build:4.9"]
   tags:
     - deploy
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
+      changes:
+        - 4.9/**/*
   variables:
     VERSION: "4.9"
     VARIANT: ""
@@ -69,6 +73,8 @@ build:branches:4.9:
   retry: 2
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
+      changes:
+        - 4.9/**/*
   tags:
     - build
   variables:
@@ -86,6 +92,8 @@ deploy:branches:4.9:
     - deploy
   rules:
     - if: '$CI_COMMIT_REF_NAME != "master"'
+      changes:
+        - 4.9/**/*
   variables:
     VERSION: "4.9"
     VARIANT: ""
@@ -95,8 +103,8 @@ deploy:branches:4.9:
 build:5.0:
   stage: build
   retry: 2
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
   tags:
     - build
   variables:
@@ -110,8 +118,8 @@ deploy:5.0:
   needs: ["build:5.0"]
   tags:
     - deploy
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
     VERSION: "5.0"
     VARIANT: ""
@@ -145,8 +153,8 @@ deploy:branches:5.0:
 build:5.1:
   stage: build
   retry: 2
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
   tags:
     - build
   variables:
@@ -160,8 +168,8 @@ deploy:5.1:
   needs: ["build:5.1"]
   tags:
     - deploy
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
     VERSION: "5.1"
     VARIANT: ""
@@ -195,8 +203,8 @@ deploy:branches:5.1:
 build:5.2:
   stage: build
   retry: 2
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
   tags:
     - build
   variables:
@@ -210,8 +218,8 @@ deploy:5.2:
   needs: ["build:5.2"]
   tags:
     - deploy
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
     VERSION: "5.2"
     VARIANT: ""
@@ -245,8 +253,8 @@ deploy:branches:5.2:
 build:5.3:
   stage: build
   retry: 2
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
   tags:
     - build
   variables:
@@ -260,8 +268,8 @@ deploy:5.3:
   needs: ["build:5.3"]
   tags:
     - deploy
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
     VERSION: "5.3"
     VARIANT: ""
@@ -295,8 +303,8 @@ deploy:branches:5.3:
 build:5.4:
   stage: build
   retry: 2
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
   tags:
     - build
   variables:
@@ -310,8 +318,8 @@ deploy:5.4:
   needs: ["build:5.4"]
   tags:
     - deploy
-  only:
-    - master
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master"'
   variables:
     VERSION: "5.4"
     VARIANT: ""
